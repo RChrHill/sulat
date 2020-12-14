@@ -1,0 +1,4 @@
+**.pyc
+/sulat/Plugins/Test_Plugin.py
+/sulat/Plugins/Plugins/Load_Order.txt
+*.idea
