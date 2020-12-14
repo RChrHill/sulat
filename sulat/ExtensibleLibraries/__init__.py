@@ -3,7 +3,7 @@ sulat data analysis library for Lattice QCD (available at: https://github.com/RC
 
 Copyright (C) 2018-2020
 
-File: sulat/ExtensibleLibrary/__init__.py
+File: sulat/ExtensibleLibraries/__init__.py
 
 Author: Nils Asmussen <https://github.com/nils-asmussen>
 Author: Ryan Hill <https://github.com/RChrHill>
