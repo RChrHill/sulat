@@ -24,7 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from .Combo import MixInCombo
-from .IO import MixInDataIO
+from .Fitting import MixInFitting
 from sulat.Utilities.ExLibFunction import ExLibFunction
 from sulat.ExtensibleLibraries.Lib_Stats import ExLib_Stats
 
@@ -37,7 +37,7 @@ def get_resampler_initialiser(Exlib, args):
     return Exlib.lookup(args)
 
 
-class Analysis(MixInCombo, MixInDataIO):
+class Analysis(MixInCombo, MixInFitting):
     @ExLibFunction(resampler=(ExLib_Stats, get_resampler_initialiser))
     def init_resampler(self, resampler, *args, **kwargs):
         self.resampler = resampler(*args, **kwargs)
