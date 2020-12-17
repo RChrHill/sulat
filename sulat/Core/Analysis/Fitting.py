@@ -87,7 +87,7 @@ class MixInFitting(MixInDataIO):
                                                             C, np.array(list(args.values())),
                                                             parameter_maps_mean, parameter_maps_bin)
 
-        return FitResult(args, funcs, central_parameters, bin_parameters, weights, subweights, fit_ranges, constants,
+        return FitResult(args, corrs, funcs, central_parameters, bin_parameters, weights, subweights, fit_ranges, constants,
                          corrs[0].resampler, parameter_maps_mean, arg_location_maps, arg_identities)
 
     @ExLibFunction(funcs=(ExLib_FitFuncs, get_fitfuncs),

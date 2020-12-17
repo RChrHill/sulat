@@ -30,7 +30,7 @@ from sulat.ExtensibleLibraries.Lib_Minimisers.Resources import p_value
 
 
 class FitResult:
-    def __init__(self, args, funcs, mean_results, submean_results, weights, subweights, fit_ranges, constants,
+    def __init__(self, args, corrs, funcs, mean_results, submean_results, weights, subweights, fit_ranges, constants,
                  resampler, parameter_map, arg_slots, arg_identities):
         mean, goodness_of_fit, residuals = mean_results[0]
         submean, submean_goodness_of_fit, subresiduals = submean_results
@@ -44,7 +44,7 @@ class FitResult:
 
         subresults = []
         numRead = 0
-        for argids, func, fitrange, pmap in zip(arg_identities, funcs, fit_ranges, parameter_map):
+        for argids, corr, func, fitrange, pmap in zip(arg_identities, corrs, funcs, fit_ranges, parameter_map):
             numAdd = len(fitrange)
             subarg_means = {key: arg_means[key] for key in argids if key not in constants}
             subarg_submeans = {key: arg_submeans[key] for key in argids if key not in constants}
@@ -53,7 +53,7 @@ class FitResult:
             subarg_slots = {list(subarg_means.keys()).index(key): argids.index(key) for key in argids}
 
             subfit_result = SubFitResult(argids, subarg_means, subarg_submeans, subarg_stds, fitrange, constants, resampler,
-                                         func, pmap, subarg_slots,
+                                         corr, func, pmap, subarg_slots,
                                          residuals[numRead:numRead+numAdd],
                                          [sp[numRead:numRead+numAdd] for sp in subresiduals])
             numRead += numAdd
@@ -85,7 +85,7 @@ class FitResult:
 
 
 class SubFitResult:
-    def __init__(self, args, mean, submean, std, fit_range, constants, resampler, func,
+    def __init__(self, args, mean, submean, std, fit_range, constants, resampler, corr, func,
                  parameter_map, arg_slots, residuals, subresiduals):
 
         Ndof = len(residuals) - len(mean)
@@ -101,6 +101,8 @@ class SubFitResult:
 
         arg_cov = resampler.cov_definition(np.array(list(mean.values())),
                                            np.array(list(submean.values())).T)
+
+        self.corr = corr
 
         self.mean = mean
         self.submean = submean
