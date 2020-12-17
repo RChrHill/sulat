@@ -50,7 +50,7 @@ class FitResult:
             subarg_submeans = {key: arg_submeans[key] for key in argids if key not in constants}
             subarg_stds = {arg_stds[key] for key in args if key not in constants}
 
-            subarg_slots = {list(subarg_means.keys()).index(key): argids.index(key) for key in argids}
+            subarg_slots = {list(subarg_means.keys()).index(key): argids.index(key) for key in argids if key in subarg_means.keys()}
 
             subfit_result = SubFitResult(argids, subarg_means, subarg_submeans, subarg_stds, fitrange, constants, resampler,
                                          corr, func, pmap, subarg_slots,
@@ -213,7 +213,6 @@ def transform_args(fit_functions, arg_names, const_dict, arg_identities, T, C, c
     param_idxs = []
 
     const_dict, vec_constants_mean, vec_constants_bin = mk_automatic_constants(correlator_db, arg_names, arg_identities, const_dict, T, C)
-
     for config in range(C):
         parameter_maps_bin.append([])
     for i, func in enumerate(fit_functions):
