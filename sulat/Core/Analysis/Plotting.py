@@ -30,6 +30,7 @@ from sulat.ExtensibleLibraries.Lib_PlotDisplayStyles import ExLib_PlotDisplaySty
 from sulat.ExtensibleLibraries.Lib_PlotOverlays import ExLib_PlotOverlays
 from sulat.ExtensibleLibraries.Lib_PlotCombos import ExLib_PlotCombos
 from sulat.Utilities.ExLibFunction import ExLibFunction
+import sulat.Utilities.StaticStrings as SS
 
 
 def get_combo(exlib, arg):
@@ -41,9 +42,9 @@ def get_combo(exlib, arg):
 
 def get_plotmodules(exlib, args):
     """
-    Pass a list of functions and function names.
+    Pass a list of functions and function names. Pass arguments in the format <function name>:<arg1>,<arg2>,...<argn>
     """
-    return [exlib.lookup(arg) for arg in args] if args is not None else None
+    return args
 
 
 def extend_kwargs(list_of_kwargs, new_kwargs, parameter_name=None):

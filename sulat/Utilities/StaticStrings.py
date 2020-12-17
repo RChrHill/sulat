@@ -25,3 +25,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 host_site = r"https://github.com/RChrHill/sulat"
+
+delim_args = ':'
+delim_append = '-'
+delim_extend = '_'
+delim_argsep = ','
