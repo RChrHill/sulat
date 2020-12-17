@@ -13,6 +13,7 @@ Features to be re-implemented:
 - Re-implement autoplots for fitscan results
 
 Additional features to be included:
+- Add SETUP.py
 - Interactive tutorials
 - A proper API for writing plugins against
 - Plotting support for data with more than one independent variable
