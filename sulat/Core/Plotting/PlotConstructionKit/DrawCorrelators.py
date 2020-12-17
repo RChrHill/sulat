@@ -27,7 +27,7 @@ from sulat.Core.Plotting.PlotConstructionKit.Utilities import mk_default
 import numpy as np
 
 
-def draw_correlator_as_errorbar(axis, x_values, correlator, kwargs, x_ratio=None, y_ratio=None):
+def draw_correlator_as_errorbar(axis, xs, correlator, kwargs, x_combo=None, y_combo=None):
     mk_default(kwargs, 'color', 'black')
     mk_default(kwargs, 'linestyle', 'None')
     mk_default(kwargs, 'marker', 'o')
@@ -36,45 +36,45 @@ def draw_correlator_as_errorbar(axis, x_values, correlator, kwargs, x_ratio=None
     mk_default(kwargs, 'capsize', 3)
     mk_default(kwargs, 'markerfacecolor', 'none')
 
-    mean_data = correlator.stats.mean
-    std_data = correlator.stats.std
+    mean_data = correlator.mean
+    std_data = correlator.std
     # Now apply the ratio
-    if y_ratio is not None:
-        data_dict = {x: y for x, y in zip(x_values, mean_data)}
-        subdata_dict = {x: y for x, y in zip(x_values, correlator.stats.sub)}
+    if y_combo is not None:
+        data_dict = {x: y for x, y in zip(xs, mean_data)}
+        subdata_dict = {x: y for x, y in zip(xs, correlator.submean)}
 
         def data_getter(x):
-            return np.array([data_dict[xval] for xval in x % len(x_values)])
+            return np.array([data_dict[xval] for xval in x % len(xs)])
 
         def subdata_getter(x):
-            return np.array([subdata_dict[xval] for xval in x % len(x_values)])
+            return np.array([subdata_dict[xval] for xval in x % len(xs)])
 
-        mean_data = y_ratio(data_getter, x_values)
-        std_data = correlator.stats.Std(y_ratio(subdata_getter, x_values), mean_data)
-    if x_ratio is not None:
-        x_values = x_ratio(x_values)
+        mean_data = y_combo(data_getter, xs)
+        std_data = correlator.stats.std_definition(y_combo(subdata_getter, xs), mean_data)
+    if x_combo is not None:
+        xs = x_combo(xs)
 
     # Include provision for x_values being 2D so you can draw a rotated errorbar
-    axis.errorbar(x_values, mean_data, std_data, **kwargs)
+    axis.errorbar(xs, mean_data, std_data, **kwargs)
 
 
-def draw_correlator_as_samples(axis, x_values, correlator, kwargs, x_ratio=None, y_ratio=None):
+def draw_correlator_as_samples(axis, xs, correlator, kwargs, x_combo=None, y_combo=None):
     mk_default(kwargs, 'color', 'black')
     mk_default(kwargs, 'linestyle', 'None')
     mk_default(kwargs, 'marker', 'o')
     #mk_default(kwargs, 'size', 1)
     mk_default(kwargs, 'alpha', .3)
 
-    sub_data = correlator.stats.sub
-    if y_ratio is not None:
-        subdata_dict = {x: y for x, y in zip(x_values, correlator.stats.sub)}
+    sub_data = correlator.submean
+    if y_combo is not None:
+        subdata_dict = {x: y for x, y in zip(xs, correlator.submean)}
 
         def subdata_getter(x):
-            return np.array([subdata_dict[xval] for xval in x % len(x_values)])
+            return np.array([subdata_dict[xval] for xval in x % len(xs)])
 
-        sub_data = y_ratio(subdata_getter, x_values)
-    if x_ratio is not None:
-        x_values = x_ratio(x_values)
+        sub_data = y_combo(subdata_getter, xs)
+    if x_combo is not None:
+        xs = x_combo(xs)
 
     # Allow samples to be plotted for 2D x values -- might work out-of-box
-    axis.scatter(np.outer(x_values, np.ones(sub_data.shape[1])), sub_data, **kwargs)
+    axis.scatter(np.outer(xs, np.ones(sub_data.shape[1])), sub_data, **kwargs)
