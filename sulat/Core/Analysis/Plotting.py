@@ -43,7 +43,7 @@ def get_plotmodules(exlib, args):
     """
     Pass a list of functions and function names.
     """
-    return [exlib.lookup(arg) for arg in args]
+    return [exlib.lookup(arg) for arg in args] if args is not None else None
 
 
 def extend_kwargs(list_of_kwargs, new_kwargs, parameter_name=None):
