@@ -22,14 +22,15 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
+import numpy as np
 
 from sulat.Core.Plotting.PlotConstructionKit.Utilities import errorband
 
 
 def make_fit_centrals(x_range, subfit, ratio):
-    candidate_data = subfit.fit(x_range, subfit.mean)
+    candidate_data = subfit.fit_central(x_range)
     if ratio is not None:
-        candidate_data = ratio(lambda x: subfit.fit(x, subfit.mean), x_range)
+        candidate_data = ratio(lambda x: subfit.fit_central(x), x_range)
     return candidate_data
 
 
