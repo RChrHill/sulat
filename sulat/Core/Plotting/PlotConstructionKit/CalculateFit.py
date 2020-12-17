@@ -43,7 +43,7 @@ def make_fit_error(x_range, subfit, ratio):
 
     # Generate errors
     return errorband(fn=fn,
-                     alpha=subfit.mean,
+                     alpha=np.array(list(subfit.mean.values())),
                      cov=subfit.res_cov,
                      args=[x_range]
                      )

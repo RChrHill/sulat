@@ -130,7 +130,7 @@ class SubFitResult:
         return self.fit_info.wrapped_func(xs, args, self.fit_info.parameter_map, self.fit_info.fit_arg_slots)
 
     def fit_central(self, xs):
-        return self.fit(xs, np.array(self.mean.vaues()))
+        return self.fit(xs, np.array(list(self.mean.values())))
 
 
 class FitFunctionInformation:
