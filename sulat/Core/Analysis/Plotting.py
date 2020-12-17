@@ -145,7 +145,7 @@ class MixInPlotting(AnalysisBase):
         plotobj = self.new_plot()
         for correlator, data_subkwargs in zip(corrs, local_data_kwargs):
             if xs is None:
-                corr_x_values = np.arange(correlator.T)
+                corr_x_values = np.arange(correlator.submean.shape[1])
             else:
                 corr_x_values = xs
             plotobj.add_data(corr_x_values, correlator, data_subkwargs, x_combo, y_combo)
