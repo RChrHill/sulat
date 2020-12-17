@@ -54,6 +54,7 @@ class Bootstrap(ResamplerBase):
         if nsamples is not None:
             self.nsamples = nsamples
         del self.random_numbers
+        self.configs = None
 
     #######################
     # Used by Correlators #
