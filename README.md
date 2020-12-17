@@ -1,5 +1,5 @@
 # sulat
-`sulat` is a numpy-based, extensible Python data analysis library for Lattice QCD. It covers core analysis procedures including resampling, data manipulation, fitting, and plotting with support for plugins.
+`sulat` is a numpy-based, extensible Python data analysis library for Lattice QCD. It covers core analysis procedures including resampling, data manipulation, fitting, and plotting, with support for plugins.
 
 ## Third-Party Dependencies
 - Numpy >= 1.17
