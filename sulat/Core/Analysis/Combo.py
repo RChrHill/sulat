@@ -61,16 +61,27 @@ class MixInCombo(MixInDataIO):
         :param kwargs: Input keyword arguments to a combination function.
         :return: A new DataStructure.
         """
-        args = optional_arg_value(args, [])
-        kwargs = optional_arg_value(kwargs, {})
+        if isinstance(combination, str):
+            nconfigs = 0
+            for key in self.configurations:
+                if f"{{{key}}}" in combination:
+                    nconfigs = 1
+                    break
+            ncorrs = 0
+            for key in self.correlators:
+                if f"{{{key}}}" in combination:
+                    ncorrs = 1
+                    break
+        else:
+            args = optional_arg_value(args, [])
+            kwargs = optional_arg_value(kwargs, {})
+            config_arg_keys = findreplaceget_deep_datastructs(args, self.configurations, Configurations)
+            config_kwarg_keys = findreplaceget_deep_datastructs(kwargs, self.configurations, Configurations)
+            corrs_arg_keys = findreplaceget_deep_datastructs(args, self.correlators, Correlator)
+            corrs_kwarg_keys = findreplaceget_deep_datastructs(kwargs, self.correlators, Correlator)
 
-        config_arg_keys = findreplaceget_deep_datastructs(args, self.configurations, Configurations)
-        config_kwarg_keys = findreplaceget_deep_datastructs(kwargs, self.configurations, Configurations)
-        corrs_arg_keys = findreplaceget_deep_datastructs(args, self.correlators, Correlator)
-        corrs_kwarg_keys = findreplaceget_deep_datastructs(kwargs, self.correlators, Correlator)
-
-        nconfigs = len(config_arg_keys) + len(config_kwarg_keys)
-        ncorrs = len(corrs_arg_keys) + len(corrs_kwarg_keys)
+            nconfigs = len(config_arg_keys) + len(config_kwarg_keys)
+            ncorrs = len(corrs_arg_keys) + len(corrs_kwarg_keys)
 
         if nconfigs and not ncorrs:
             return self.combine_configurations(combination, args, kwargs)
@@ -89,6 +100,11 @@ class MixInCombo(MixInDataIO):
 
     @ExLibFunction(combination=(ExLib_Combinations, get_combination_arg))
     def combine_configurations(self, combination, args=None, kwargs=None):
+        if type(combination) == str:
+            if args is not None or kwargs is not None:
+                raise ValueError(f"Combination \'{combination}\' is not a function or the string-ID of a built-in "
+                                 f"function. Do not pass arguments or keyword arguments for string-evaluation mode.")
+            return self.__parse_configurations_string(combination)
         args = optional_arg_value(args, [])
         kwargs = optional_arg_value(kwargs, {})
 
@@ -160,8 +176,8 @@ class MixInCombo(MixInDataIO):
             Ts.add(self.configurations[datastruct].data.shape[1])
             data_string = data_string.replace(f"{{{datastruct}}}", f"self.configurations[\'{datastruct}\'].data")
 
-        assert len(Ts) == 1, f"Configurations did not have the same number of timeslices: {Ts}"
-        assert len(Cs) == 1, f"Configurations did not have the same number of configurations: {Cs}"
+        assert len(Ts) == 1, f"Configurations did not have the same number of timeslices: {list(Ts)}"
+        assert len(Cs) == 1, f"Configurations did not have the same number of configurations: {list(Cs)}"
 
         T = list(Ts)[0]
         C = list(Cs)[0]
