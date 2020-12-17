@@ -3,11 +3,9 @@ sulat data analysis library for Lattice QCD (available at: https://github.com/RC
 
 Copyright (C) 2018-2020
 
-File: sulat/__init__.py
+File: sulat/Plugins/__init__.py
 
-Author: Nils Asmussen <https://github.com/nils-asmussen>
 Author: Ryan Hill <https://github.com/RChrHill>
-Author: James Richings <https://github.com/JPRichings>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +17,6 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
+You should have received a copy ofAnalysisPlotting the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-
-from sulat.Core.Analysis import Analysis
-from sulat.Plugins import PluginManger
