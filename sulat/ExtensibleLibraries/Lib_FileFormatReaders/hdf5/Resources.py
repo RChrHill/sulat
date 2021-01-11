@@ -1,9 +1,9 @@
 """
 sulat data analysis library for Lattice QCD (available at: https://github.com/RChrHill/sulat)
 
-Copyright (C) 2018-2020
+Copyright (C) 2018-2021
 
-File: sulat/ExtensibleLibraries/Lib_FileFormatReaders/Text.py
+File: sulat/ExtensibleLibraries/Lib_FileFormatReaders/hdf5/Resources.py
 
 Author: Nils Asmussen <https://github.com/nils-asmussen>
 
@@ -23,9 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
 import h5py
-import numpy as np
-import re
-import glob
 
 def load_hdf5_trajectory_fct_hadrons(filename, datasetname):
     have_dt=filename.find('_dt_')!=-1
@@ -80,38 +77,3 @@ def _load_data(dataset):
     if dataset.dtype.names == ('re', 'im'):
         return dataset['re']+1j*dataset['im']
     assert False, "Load HDF5: loading dataset of type "+str(dataset.dtype)+" not implemented"
-
-def hdf5(filepath, trajectory_fct='hadrons', filename_filter_fct=None, hdf5path=None, attributes=None):
-    if isinstance(trajectory_fct, str):
-        trajfct=load_hdf5_trajectory_fct_dict[trajectory_fct]
-    else:
-        trajfct=trajectory_fct
-    if hdf5path is not None:
-        hdf5pathregex=re.compile('^'+hdf5path+'$')
-    else:
-        hdf5pathregex=None
-    data={}
-    for filename in glob.iglob(filepath):
-        if filename_filter_fct is None or filename_filter_fct(filename):
-            with h5py.File(filename, 'r') as f:
-                dsets=set()
-                if hdf5path is not None \
-                        and hdf5path in f \
-                        and isinstance(f[hdf5path], h5py.Dataset):
-                    dsets.add(f[hdf5path])
-                else:
-                    dsets=set()
-                    _add_datasets(dsets, f)
-                    dsets={ ds for ds in dsets if _dataset_filter(ds, hdf5pathregex, attributes) }
-                for dset in dsets:
-                    cfg=trajfct(filename, dset.name)
-                    if cfg is not None:
-                        assert cfg not in data, "Load HDF5: the configuration labeled "+str(cfg)+" already exists in data"
-                        data[cfg]=_load_data(dset)
-    trajs=list(data.keys())
-    trajs.sort()
-    result=np.concatenate([ data[traj] for traj in trajs ])
-    T={ len(data[traj]) for traj in trajs }
-    assert len(T)==1, 'Load HDF5: all data sets must have the same length (have '+str(T)+')'
-    T=T.pop()
-    return result.reshape(T, len(trajs), order='F')
